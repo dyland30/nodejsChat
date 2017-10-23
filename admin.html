@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peruviando Chat</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+  <script>
+    var socket = io();
+
+    var user;
+
+    var selectedUser;
+
+    var messages = JSON.parse(sessionStorage.getItem("messages"));
+    if(!messages){
+      messages=[];
+    }
+
+    $(document).ready(function(){
+      $("#frmUsuario").show();
+      $("#frmMensaje").hide();
+      user = sessionStorage.getItem('username');
+      if(user){
+        $("#frmUsuario").hide();
+        $("#frmMensaje").show();
+        //show saved messages
+        messages.forEach(function(data){
+          document.getElementById('message-container').innerHTML += '<div><b>'+data.user+'</b>: '+data.message +'</div>';
+
+        });
+
+      }
+
+    });
+
+    function login(){
+      var usr = {username:document.getElementById('username').value, name:document.getElementById('name').value,password:document.getElementById('password').value};
+
+      socket.emit('loginAdmin',usr);
+    };
+
+    function selectUser(btn){
+      //alert(btn.value);
+      selectedUser = btn.value;
+      if(selectedUser){
+        document.getElementById('message-container-header').innerHTML='<b>'+selectedUser+'</b>';
+      }
+
+    }
+
+
+    socket.on('loginError',function(data){
+      document.getElementById('error-container').innerHTML=data;
+    });
+
+    socket.on('adminConected',function(data){
+      user = data.username;
+      sessionStorage.setItem('username', data.username);
+      sessionStorage.setItem('name',data.name);
+
+      $("#frmMensaje").show();
+      $("#frmUsuario").hide();
+
+    });
+
+    function sendMessage(){
+      var msg=document.getElementById('txtMensaje').value;
+      if(msg){
+        socket.emit('msg',{message:msg,user:user,receptor:selectedUser});
+      }
+    };
+    socket.on('newmsg',function(data){
+      if(user){
+        messages.push(data);
+        sessionStorage.setItem('messages',JSON.stringify(messages));
+        document.getElementById('message-container').innerHTML += '<div><b>'+data.user+'</b>: '+data.message +'</div>';
+      }
+    });
+
+    socket.on('userList',function(users){
+      if(users){
+        var usersHtml ='';
+        users.forEach(function(username){
+            usersHtml+= '<button type="button" class="list-group-item" value="'+username+'" onclick="selectUser(this)">'+username+'</button>';
+        });
+        document.getElementById('user-list').innerHTML = usersHtml;
+
+      }
+    });
+
+  </script>
+  <div class="container">
+
+
+    <div class="form-horizontal" id="frmUsuario">
+      <div class="has-error" id="error-container">
+
+      </div>
+
+      <div class="form-group">
+        <label>Usuario</label>
+        <input type="text" name="username" id="username" value="" placeholder="nombre de usuario" class="form-control">
+
+      </div>
+      <div class="form-group">
+        <label>Nombre a mostrar</label>
+        <input type="text" name="name" id="name" value="" placeholder="nombre a mostrar" class="form-control">
+
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" name="password" id="password" value="" placeholder="Ingresa tu contraseña" class="form-control">
+
+      </div>
+      <div class="form-group">
+        <button type="button" name="btnLogin" class="btn btn-primary" onclick="login()">Ingresa</button>
+      </div>
+
+    </div>
+
+    <div id="frmMensaje">
+      <div class="col-sm-4">
+        <div class="list-group" id="user-list">
+
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="form-horizontal" >
+          <div class="form-group">
+            <label>Mensaje</label>
+            <input type="text" name="txtMensaje" id="txtMensaje" value="" placeholder="ingresa tu mensaje" class="form-control">
+          </div>
+          <div class="form-group">
+            <button type="button" name="btnMensaje" class="btn btn-success" onclick="sendMessage()">Enviar</button>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" id="message-container-header">
+
+            </div>
+            <div class="panel-body"  id="message-container">
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+</body>
+
+</html>

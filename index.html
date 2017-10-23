@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peruviando Chat</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+  <script>
+    var socket = io();
+    /*
+    socket.on('message', function(data) {
+      document.write(data);
+    });
+    socket.on('testEvent', function(data) {
+      document.write(data.description);
+    });
+    socket.on('broadcast', function(data) {
+      document.write('<p>' + data.description + '</p>')
+    });
+    socket.emit('clientEvent', {
+      mensaje: 'hola señor admin'
+    });
+    */
+    $(document).ready(function(){
+      $("#frmUsuario").show();
+      $("#frmMensaje").hide();
+
+    });
+    var user;
+
+    function setUsername(){
+      socket.emit('setUsername',document.getElementById('nombre').value);
+    };
+
+
+    socket.on('userExists',function(data){
+      document.getElementById('error-container').innerHTML=data;
+    });
+
+    socket.on('userSet',function(data){
+      user = data.username;
+      $("#frmMensaje").show();
+      $("#frmUsuario").hide();
+    });
+    socket.on('adminConected',function(data){
+      if(data){
+        document.getElementById('message-container').innerHTML += '<div>El administrador <b>'+data.name+'</b>: se ha conectado.  </div>';
+      }
+    });
+
+    function sendMessage(){
+      var msg=document.getElementById('txtMensaje').value;
+      if(msg){
+        socket.emit('msg',{message:msg,user:user,receptor:'admin'});
+      }
+    };
+    socket.on('newmsg',function(data){
+      if(user && (data.receptor==user || data.user==user)){
+        document.getElementById('message-container').innerHTML += '<div><b>'+data.user+'</b>: '+data.message +'</div>';
+      }
+    });
+
+  </script>
+  <div class="container">
+    <div class="form-horizontal" id="frmUsuario">
+      <div class="has-error" id="error-container">
+
+      </div>
+
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" name="nombre" id="nombre" value="" placeholder="Ingresa tu nombre" class="form-control">
+
+      </div>
+      <div class="form-group">
+        <button type="button" name="btnNombre" class="btn btn-primary" onclick="setUsername()">Ingresa</button>
+      </div>
+
+    </div>
+    <div class="form-horizontal" id="frmMensaje">
+      <div class="form-group">
+        <label>Mensaje</label>
+        <input type="text" name="txtMensaje" id="txtMensaje" value="" placeholder="ingresa tu mensaje" class="form-control">
+      </div>
+      <div class="form-group">
+        <button type="button" name="btnMensaje" class="btn btn-success" onclick="sendMessage()">Enviar</button>
+      </div>
+      <div class="panel panel-default" id="message-container"></div>
+    </div>
+
+  </div>
+
+
+
+</body>
+
+</html>
