@@ -1,16 +1,31 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io =require('socket.io')(http);
 var path = require('path');
 
+
+app.set('view engine', 'ejs');
+
+app.set('views', __dirname + '/public/views')
+//javascript files
+/*
+app.get('/client.js', function(req, res) {
+  res.sendFile(path.join(__dirname + '/js/client.js'));
+});
+app.get('/admin.js', function(req, res) {
+  res.sendFile(path.join(__dirname + '/js/admin.js'));
+});
+*/
+ app.use('/js', express.static(__dirname + '/public/js'));
+
 //rutas
 app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname + '/index.html'));
+  res.render('index.ejs');
 });
 app.get('/chat-admin', function(req, res) {
-  res.sendFile(path.join(__dirname + '/admin.html'));
+  res.render('admin.ejs');
 });
-
 
 var userCount=0;
 var adminUser ={username:'admin',name:'',password:'1234'};
@@ -87,6 +102,6 @@ socket.on('msg',function(data){
 
 });
 
-http.listen(3000, function() {
-   console.log('listening on *:3000');
+http.listen(8000, function() {
+   console.log('listening on *:8000');
 });

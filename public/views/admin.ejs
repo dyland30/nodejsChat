@@ -1,0 +1,66 @@
+<% include partials/header %>
+    <script src=js/admin.js></script>
+    <div class="container" style="margin-top:30px">
+
+        <div class="form-horizontal" id="frmUsuario">
+            <div class="has-error" id="error-container">
+
+            </div>
+
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="text" name="username" id="username" value="" placeholder="nombre de usuario" class="form-control">
+
+            </div>
+            <div class="form-group">
+                <label>Nombre a mostrar</label>
+                <input type="text" name="name" id="name" value="" placeholder="nombre a mostrar" class="form-control">
+
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" name="password" id="password" value="" placeholder="Ingresa tu contraseña" class="form-control">
+
+            </div>
+            <div class="form-group">
+                <button type="button" name="btnLogin" class="btn btn-primary" onclick="login()">Ingresa</button>
+            </div>
+
+        </div>
+
+        <div id="frmMensaje">
+            <div class="col-sm-4">
+                <div class="list-group" id="user-list">
+
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">Mensaje</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="txtMensaje" id="txtMensaje" value="" placeholder="ingresa tu mensaje" class="form-control" onkeyup="messageBtnKeyUp(event)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="button" name="btnMensaje" class="btn btn-success" onclick="sendMessage()">Enviar</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel panel-default">
+
+                    <div class="panel-heading" id="message-container-header">
+
+                    </div>
+                    <div class="panel-body" id="message-container">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <% include partials/footer %>

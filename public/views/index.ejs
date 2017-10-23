@@ -1,0 +1,47 @@
+<% include partials/header %>
+    <script src="js/client.js"></script>
+    <div class="container" style="margin-top:30px">
+        <div class="has-error" id="error-container">
+
+        </div>
+        <div class="form-horizontal" id="frmUsuario">
+            <div class="form-group">
+                <label class="control-label col-sm-2">Nombre</label>
+                <div class="col-sm-10">
+                    <input type="text" name="nombre" id="nombre" value="" placeholder="Ingresa tu nombre" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" name="btnNombre" class="btn btn-primary" onclick="setUsername()">Ingresa</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-horizontal" id="frmMensaje">
+            <div class="form-group">
+                <label class="control-label col-sm-2">Mensaje</label>
+                <div class="col-sm-10">
+                    <input type="text" name="txtMensaje" id="txtMensaje" value="" placeholder="ingresa tu mensaje" class="form-control" onkeyup="messageBtnKeyUp(event)">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" name="btnMensaje" class="btn btn-success" onclick="sendMessage()">Enviar</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Mensajes
+            </div>
+            <div class="panel-body" id="message-container">
+
+            </div>
+        </div>
+    </div>
+    <% include partials/footer %>
