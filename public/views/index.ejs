@@ -1,6 +1,35 @@
 <% include partials/header %>
+<style media="screen">
+  html, body {
+    height: 100%;
+  }
+  #frmMensaje{
+    position: absolute;
+
+    bottom: 10px;
+  }
+  #mainContainer{
+    position: relative;
+    /*background-color: #3ad7ec; */
+    height: 100%;
+    min-height: 100%;
+  }
+  #message-panel{
+    position: relative;
+    height: 85%;
+
+  }
+  #message-container{
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 85%;
+}
+
+
+</style>
     <script src="js/client.js"></script>
-    <div class="container" style="margin-top:30px">
+    <div class="container" id="mainContainer">
         <div class="has-error" id="error-container">
 
         </div>
@@ -19,23 +48,7 @@
 
         </div>
 
-        <div class="form-horizontal" id="frmMensaje">
-            <div class="form-group">
-                <label class="control-label col-sm-2">Mensaje</label>
-                <div class="col-sm-10">
-                    <input type="text" name="txtMensaje" id="txtMensaje" value="" placeholder="ingresa tu mensaje" class="form-control" onkeyup="messageBtnKeyUp(event)">
-                </div>
-
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="button" name="btnMensaje" class="btn btn-success" onclick="sendMessage()">Enviar</button>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="panel panel-default">
+        <div class="panel panel-default" id="message-panel">
             <div class="panel-heading">
                 Mensajes
             </div>
@@ -43,5 +56,19 @@
 
             </div>
         </div>
+        <div class="row" id="frmMensaje">
+
+                <div class="col-sm-12">
+                  <div class="input-group">
+                    <input type="text" name="txtMensaje" id="txtMensaje" value="" placeholder="ingresa tu mensaje" class="form-control" onkeyup="messageBtnKeyUp(event)">
+
+                    <span class="input-group-btn">
+                        <button type="button" name="btnMensaje" class="btn btn-success" onclick="sendMessage()">Enviar</button>
+                    </span>
+
+                  </div>
+                </div>
+        </div>
+
     </div>
     <% include partials/footer %>

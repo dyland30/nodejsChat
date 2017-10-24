@@ -64,6 +64,9 @@ function sendMessage(){
   if(msg){
     socket.emit('msg',{message:msg,user:user,receptor:'admin'});
     document.getElementById('txtMensaje').value='';
+    var objDiv = document.getElementById("message-container");
+    objDiv.scrollTop = objDiv.scrollHeight;
+    //alert(objDiv.scrollHeight);
   }
 };
 socket.on('newmsg',function(data){
