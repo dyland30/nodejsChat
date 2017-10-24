@@ -4,11 +4,11 @@ var messages=[];
 
 $(document).ready(function(){
   $("#frmUsuario").show();
-  $("#frmMensaje").hide();
+  $("#message-zone").hide();
     user = sessionStorage.getItem('client-username');
     if(user){
       $("#frmUsuario").hide();
-      $("#frmMensaje").show();
+      $("#message-zone").show();
         //loguear nuevamente al usuario
       socket.emit('setUsername',user);
       showMessages();
@@ -25,10 +25,12 @@ function showMessages(){
   //show only messages from a selected user
   var htmlMessages = '';
   messages.forEach(function(data){
-    htmlMessages += '<div><b>'+data.user+'</b>: '+data.message +'</div>';
+    htmlMessages += '<div><span style="font-size:small;color:gray"> ['+data.messageDate.toString()+'] </span>    <b>'+data.user+'</b>: '+data.message +'</div>';
 
   });
   document.getElementById('message-container').innerHTML =htmlMessages;
+  var objDiv = document.getElementById("message-container");
+  objDiv.scrollTop = objDiv.scrollHeight;
 
 };
 
@@ -50,7 +52,7 @@ socket.on('userExists',function(data){
 socket.on('userSet',function(data){
   user = data.username;
   sessionStorage.setItem('client-username', data.username);
-  $("#frmMensaje").show();
+  $("#message-zone").show();
   $("#frmUsuario").hide();
 });
 socket.on('adminConected',function(data){
@@ -64,8 +66,7 @@ function sendMessage(){
   if(msg){
     socket.emit('msg',{message:msg,user:user,receptor:'admin'});
     document.getElementById('txtMensaje').value='';
-    var objDiv = document.getElementById("message-container");
-    objDiv.scrollTop = objDiv.scrollHeight;
+
     //alert(objDiv.scrollHeight);
   }
 };

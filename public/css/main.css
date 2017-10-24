@@ -1,0 +1,31 @@
+html, body {
+  height: 100%;
+}
+#frmMensaje{
+  position: absolute;
+
+  bottom: 10px;
+}
+#mainContainer{
+  position: relative;
+  /*background-color: #3ad7ec; */
+  height: 100%;
+  min-height: 100%;
+}
+#message-zone{
+  position: relative;
+  /*background-color: #3ad7ec; */
+  height: 100%;
+  min-height: 100%;
+}
+#message-panel{
+  position: relative;
+  height: 85%;
+
+}
+#message-container{
+position: relative;
+overflow-x: hidden;
+overflow-y: auto;
+height: 85%;
+}

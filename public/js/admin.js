@@ -6,11 +6,11 @@ var messages =[];
 
 $(document).ready(function(){
   $("#frmUsuario").show();
-  $("#frmMensaje").hide();
+  $("#message-zone").hide();
   user = sessionStorage.getItem('username');
   if(user){
     $("#frmUsuario").hide();
-    $("#frmMensaje").show();
+    $("#message-zone").show();
     //show saved messages
 
     //show saved users
@@ -30,11 +30,13 @@ function showMessages(){
   var htmlMessages = '';
   messages.forEach(function(data){
     if(data.user==selectedUser || (data.user==user && data.receptor==selectedUser)){
-        htmlMessages += '<div><b>'+data.user+'</b>: '+data.message +'</div>';
+        htmlMessages += '<div><span style="font-size:small;color:gray"> ['+data.messageDate.toString()+'] </span>    <b>'+data.user+'</b>: '+data.message +'</div>';
     }
 
   });
   document.getElementById('message-container').innerHTML =htmlMessages;
+  var objDiv = document.getElementById("message-container");
+  objDiv.scrollTop = objDiv.scrollHeight;
 
 };
 
@@ -64,7 +66,7 @@ socket.on('adminConected',function(data){
   sessionStorage.setItem('username', data.username);
   sessionStorage.setItem('name',data.name);
 
-  $("#frmMensaje").show();
+  $("#message-zone").show();
   $("#frmUsuario").hide();
 
 });
@@ -74,6 +76,7 @@ function sendMessage(){
   if(msg){
     socket.emit('msg',{message:msg,user:user,receptor:selectedUser});
     document.getElementById('txtMensaje').value='';
+
   }
 };
 function messageBtnKeyUp(evt){

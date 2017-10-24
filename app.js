@@ -18,7 +18,7 @@ app.get('/admin.js', function(req, res) {
 });
 */
  app.use('/js', express.static(__dirname + '/public/js'));
-
+ app.use('/css', express.static(__dirname + '/public/css'));
 //rutas
 app.get('/', function(req, res) {
   res.render('index.ejs');
