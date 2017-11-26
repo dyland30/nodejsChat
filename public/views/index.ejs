@@ -6,17 +6,18 @@
 
         </div>
         <div class="form-horizontal" id="frmUsuario">
-            <div class="form-group">
-                <label class="control-label col-sm-2">Nombre</label>
-                <div class="col-sm-10">
-                    <input type="text" name="nombre" id="nombre" value="" placeholder="Ingresa tu nombre" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="button" name="btnNombre" class="btn btn-primary" onclick="setUsername()">Ingresa</button>
-                </div>
-            </div>
+            
+
+            <div class="input-group">
+                <input type="text" name="nombre" id="nombre" value="" placeholder="Bienvenido, dinos tu nombre" class="form-control" onkeyup="nombreKeyUp(event)">
+
+                <span class="input-group-btn">
+                    <button type="button" name="btnNombre" class="btn btn-primary" onclick="setUsername()">Chatea con nosotros!</button>
+                </span>
+
+              </div>
+
+
 
         </div>
         <div id="message-zone">

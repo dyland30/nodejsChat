@@ -44,6 +44,12 @@ function messageBtnKeyUp(evt){
   }
 
 };
+function nombreKeyUp(evt){
+  if(evt.keyCode==13){
+    setUsername();
+  }
+
+}
 
 socket.on('userExists',function(data){
   document.getElementById('error-container').innerHTML=data;
