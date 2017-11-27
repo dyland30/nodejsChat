@@ -25,15 +25,28 @@ app.get('/admin.js', function(req, res) {
 //rutas
 app.get('/', function(req, res) {
   res.render('index.ejs');
-  mensajeCtrl.getAllMessages(function(messages){
-    console.log("mensajes");
-    console.log(messages);
-
-  });
 });
 app.get('/chat-admin', function(req, res) {
   res.render('admin.ejs');
 });
+
+app.get('/api/mensajes/:shortDate',function(req,res){
+
+  mensajeCtrl.getMessagesByDate(req.params.shortDate, function(data){
+    res.json(data);
+  });
+
+});
+
+app.get('/api/mensajes',function(req,res){
+  
+    mensajeCtrl.getAllMessages(function(data){
+      res.json(data);
+    });
+  
+  });
+
+//FIN DE RUTAS HTTP
 
 var userCount=0;
 var adminUser ={username:'admin',name:'',password:'1234'};
@@ -95,8 +108,9 @@ socket.on('msg',function(data){
   data.messageDate = new Date();
   //guardar mensaje en bd 
   
-  mensajeCtrl.addMessage(data,function(){
+  mensajeCtrl.addMessage(data,function(msg){
     console.log("mensaje guardado en db ID:"+data.idMensaje);
+    console.log(JSON.stringify(msg));
   });
   
   io.sockets.emit('newmsg',data);
