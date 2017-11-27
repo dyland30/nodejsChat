@@ -3,11 +3,14 @@ var app = express();
 var http = require('http').Server(app);
 var io =require('socket.io')(http);
 var path = require('path');
+var mensajeCtrl = require('./app/MensajeController.js');
 
+// configure dotenv
+//require('dotenv').config();
 
 app.set('view engine', 'ejs');
 
-app.set('views', __dirname + '/public/views')
+app.set('views', __dirname + '/public/views');
 //javascript files
 /*
 app.get('/client.js', function(req, res) {
@@ -22,6 +25,11 @@ app.get('/admin.js', function(req, res) {
 //rutas
 app.get('/', function(req, res) {
   res.render('index.ejs');
+  mensajeCtrl.getAllMessages(function(messages){
+    console.log("mensajes");
+    console.log(messages);
+
+  });
 });
 app.get('/chat-admin', function(req, res) {
   res.render('admin.ejs');
@@ -85,7 +93,14 @@ socket.on('setUsername',function(data){
 socket.on('msg',function(data){
   //enviar mensaje a todos
   data.messageDate = new Date();
+  //guardar mensaje en bd 
+  
+  mensajeCtrl.addMessage(data,function(){
+    console.log("mensaje guardado en db ID:"+data.idMensaje);
+  });
+  
   io.sockets.emit('newmsg',data);
+  
 });
 
 
